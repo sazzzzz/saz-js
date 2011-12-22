@@ -132,6 +132,8 @@ SAZ.event.Observer = (function() {
 		}		
 	};
 	_notify = function (e) {
+		//console.log('_notify(');
+		//console.dir(arguments);
 		var listeners = this._listeners;
 		//var e = new SAZ.event.Event(type, this);
 		var type = e.type;

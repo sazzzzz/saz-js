@@ -23,8 +23,8 @@ SAZ.mvp.Value = (function() {
 	//
 	// プライベートプロパティ
 	//
-	var Constr,
-		_value;
+	var Constr;
+		//_value;		// 共有化されちゃう？
 	
 	//
 	// 初期化処理（があればこの辺で）
@@ -32,8 +32,8 @@ SAZ.mvp.Value = (function() {
 	
 	// コンストラクタ
 	Constr = function (value) {
-		_value = value;
-		//console.log('this.addObserver='+this.addObserver);	// undefined
+		//_value = value;
+		this.setValue(value);
 		if (this.addObserver == null) Observer.initialize(this);
 	};
 	
@@ -44,16 +44,15 @@ SAZ.mvp.Value = (function() {
 	// プロトタイプ
 	Constr.prototype = {
 		constructor: SAZ.mvp.Value,
+		_value: null,
 		getValue: function () {
-			return _value;
+			return this._value;
 		},
 		setValue: function (value) {
-			console.log('setValue('+value);
-			//console.dir(this);
-			var old=_value;
-			this.notify(new WatchEvent(this.EVENT_CHANGING,this,old,value));
-			_value = value;
-			this.notify(new WatchEvent(this.EVENT_CHANGED,this,old,value));
+			var old=this._value;
+			if(this.notify)this.notify(new WatchEvent(SAZ.mvp.Value.EVENT_CHANGING,this,old,value));
+			this._value = value;
+			if(this.notify)this.notify(new WatchEvent(SAZ.mvp.Value.EVENT_CHANGED,this,old,value));
 		}
 	};
 	//if (Constr.prototype.addObserver == null) SAZ.event.Observer.initialize(Constr.prototype);
