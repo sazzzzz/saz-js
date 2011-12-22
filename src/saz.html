@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>saz.js コア</title>
+	<meta name="language" content="ja" />
+	
+	<script type="text/javascript" src="js/saz.js"></script>
+	<script type="text/javascript" src="js/saz.util.js"></script>
+	
+</head>
+<body>
+<h1>saz.js コア</h1>
+
+<script type="text/javascript">
+// SAZ.namespace
+console.log('- SAZ.namespace -');
+// ローカル変数に代入
+var module2 = SAZ.namespace('SAZ.modules.module2');
+console.log(module2 === SAZ.modules.module2);
+// 先頭を省略
+SAZ.namespace('modules.module51');
+// 長い
+SAZ.namespace('once.upon.a.time.there.was.this.long.nested.property');
+</script>
+
+</body>
+</html>

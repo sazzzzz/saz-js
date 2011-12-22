@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>saz.js saz.event</title>
+	<meta name="language" content="ja" />
+	
+	<script type="text/javascript" src="js/saz.js"></script>
+	<script type="text/javascript" src="js/saz.event.js"></script>
+	
+</head>
+<body>
+<h1>saz.js saz.event</h1>
+<script type="text/javascript">
+
+// SAZ.isArray
+console.log('- SAZ.util.isArray -');
+console.log(SAZ.util.isArray([]));
+console.log(SAZ.util.isArray({}));
+
+
+// SAZ.curry
+console.log('- SAZ.util.curry -');
+function add(x,y) {
+	return x + y;
+}
+var newadd = SAZ.util.curry(add, 5);
+console.log(newadd(4));
+
+function add5(a, b, c, d, e) {
+	return a + b + c + d + e;
+}
+// 引数が複数でもOK
+console.log(SAZ.util.curry(add5, 1, 2, 3)(5, 5));
+// 2段階のカリー化
+var addOne = SAZ.util.curry(add5, 1);
+console.log(addOne(10, 10, 10, 10));
+var addSix = SAZ.util.curry(addOne, 2, 3);
+console.log(addSix(5, 5));
+
+
+// SAZ.extend
+console.log('- SAZ.util.extend -');
+var dad = {name: 'Adam'};
+var kid = SAZ.util.extend(dad);
+console.log(kid.name);
+var dad2 = {
+	counts: [1,2,3],
+	reads: {paper: true}
+};
+var kid2 = SAZ.util.extend(dad2);
+
+kid2.counts.push(4);
+console.log(dad2.counts.toString());		// 1,2,3,4
+console.log(dad2.reads === kid2.reads);	// true
+
+
+// SAZ.extendDeep
+console.log('- SAZ.util.extendDeep -');
+var kid3 = SAZ.util.extendDeep(dad2);
+
+kid3.counts.push(4);
+console.log(kid3.counts.toString());
+console.log(dad2.counts.toString());
+
+console.log(dad2.reads === kid3.reads);
+kid3.reads.paper = false;
+kid3.reads.web = true;
+console.log(dad2.reads.paper);
+
+</script>
+</body>
+</html>
