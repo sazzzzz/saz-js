@@ -30,6 +30,9 @@ SAZ.X = (function() {
 		this.prop1 = arg1;
 	}
 	
+	// 静的プロパティ
+	Constr.PROP = 'prop';
+	
 	// プロトタイプ
 	Constr.prototype = {
 		constructor: SAZ.X,
