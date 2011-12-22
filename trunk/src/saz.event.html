@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>saz.js saz.event</title>
+	<meta name="language" content="ja" />
+	
+	<script type="text/javascript" src="js/saz.js"></script>
+	<script type="text/javascript" src="js/saz.event.js"></script>
+	
+</head>
+<body>
+<h1>saz.js saz.event</h1>
+<script type="text/javascript">
+
+var o = {name:'o'};
+SAZ.event.Observer.initialize(o);
+o.addObserver('test',function(e){
+	console.log('test handler');
+	//console.dir(e);
+});
+//o.notify('test',1);
+o.notify(new SAZ.event.Event('test'));
+console.log('o');
+//console.dir(o);
+
+
+var tim=setTimeout(function(){
+	o.notify(new SAZ.event.Event('test'));
+}, 1000);
+
+
+var we = new SAZ.event.WatchEvent('test', this, 'old', 'NEW!');
+//console.log('WatchEvent');
+//console.dir(we);
+
+</script>
+</body>
+</html>

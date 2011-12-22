@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>saz.js saz.mvp</title>
+	<meta name="language" content="ja" />
+	
+	<script type="text/javascript" src="js/saz.js"></script>
+	<script type="text/javascript" src="js/saz.event.js"></script>
+	<script type="text/javascript" src="js/saz.mvp.js"></script>
+	
+</head>
+<body>
+<h1>saz.js saz.mvp</h1>
+<script type="text/javascript">
+
+var str=new SAZ.mvp.Value('A');
+console.log(str.getValue());
+//console.dir(str);
+
+var num=new SAZ.mvp.Value(99);
+console.log(num.getValue());
+
+
+str.addObserver(SAZ.mvp.Value.EVENT_CHANGING, function(e){
+//str.addObserver(str.EVENT_CHANGING, function(e){
+	console.log('str changing');
+	//console.dir(e);
+});
+num.addObserver(SAZ.mvp.Value.EVENT_CHANGED, function(e){
+	console.log('num changed');
+	//console.dir(e);
+});
+
+//console.dir(str);
+
+var tim=setTimeout(function(){
+	str.setValue('B');
+	num.setValue(999);
+}, 1000);
+
+</script>
+</body>
+</html>
