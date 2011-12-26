@@ -85,7 +85,9 @@ SAZ.mvp.ValueWatcher = (function() {
 	var Constr;
 	
 	// コンストラクタ
-	Constr = function () {
+	Constr = function (host,handler) {
+		//this.unwatch();
+		this.watch(host, handler);
 	}
 	
 	// プロトタイプ
@@ -93,26 +95,25 @@ SAZ.mvp.ValueWatcher = (function() {
 		constructor: SAZ.mvp.Value,
 		
 		_host: null,
-		_chain: null,
 		_handler: null,
 		
-		isWatching: false,
 		getValue: function(){
 			return _host.getValue();
 		},
-		watch: function(host,handler){
+		watch: function(host,handler) {
 			if (host==null||handler==null) return null;
 			
 			this.unwatch();
 			this._host=host;
 			this._handler=handler;
 			this._host.addObserver(SAZ.mvp.Value.EVENT_CHANGED, this._handler);
-			return this;
 		},
 		unwatch: function(){
-			if (this._host==null || this._chaing==null || this._handler==null) return null;
+			if (this._host==null || this._handler==null) return null;
 			
 			this._host.removeObserver(SAZ.mvp.Value.EVENT_CHANGED, this._handler);
+			this._host=null;
+			this._handler=null;
 			return this;
 		}
 	};
@@ -144,6 +145,9 @@ SAZ.mvp.BindingUtil = (function() {
 		 * @return	{ValueWatcher} ValueWatcherインスタンス.
 		 */
 		bindProperty: function (site,prop,value) {
+			return new SAZ.mvp.ValueWatcher(value,function(e){
+				site[prop]=e.newValue;
+			});
 		},
 		
 		/**
@@ -153,6 +157,9 @@ SAZ.mvp.BindingUtil = (function() {
 		 * @return	{ValueWatcher} ValueWatcherインスタンス.
 		 */
 		bindSetter: function (setter,value) {
+			return new SAZ.mvp.ValueWatcher(value,function(e){
+				setter(value);
+			});
 		},
 		
 		END:''

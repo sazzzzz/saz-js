@@ -62,7 +62,12 @@ SAZ.X = (function() {
 		
 		_name: 'name',
 		
-		test: function(){
+		/**
+		 * テストメソッド.
+		 * @param	{Object} dum 値が変更されたときに、呼び出すsetterメソッド.
+		 * @return	{String} 'test'.
+		 */
+		test: function(dum){
 			console.log('--- SAZ.X test ---'+this._name);
 
 			console.log('STATIC='+SAZ.X.STATIC);
@@ -74,7 +79,8 @@ SAZ.X = (function() {
 
 			console.log('prop1='+this.prop1);
 			//console.log('prop1='+prop1);								// Error: prop1 is not defined
-		
+			
+			return 'test';
 		},
 		getProp: function(){
 			return _privateStatic;

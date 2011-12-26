@@ -1,0 +1,8 @@
+body{
+	font: 12px/18px "Lucida Grande", "Lucida Sans Unicode", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", Helvetica, Arial, Verdana, sans-serif;
+	line-height: 1.5;
+}
+h1{
+	font-size: 60px;
+	font-style: italic;
+}
