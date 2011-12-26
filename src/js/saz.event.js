@@ -103,15 +103,12 @@ SAZ.event.Observer = (function() {
 	//
 	var _array_string = '[object Array]',
 		_oToString = Object.prototype.toString,
-		_aSlice = Array.prototype.slice,
-		_target;
+		_aSlice = Array.prototype.slice;
 	
 	//
 	// プライベートメソッド
 	//
 	_addObserver = function (type, listener, context) {
-		//console.log('_addObserver(');
-		//console.dir(arguments);
 		var listeners = this._listeners;
 		if (!listeners[type]) {
 			listeners[type] = [];
@@ -132,8 +129,6 @@ SAZ.event.Observer = (function() {
 		}		
 	};
 	_notify = function (e) {
-		//console.log('_notify(');
-		//console.dir(arguments);
 		var listeners = this._listeners;
 		//var e = new SAZ.event.Event(type, this);
 		var type = e.type;
@@ -164,7 +159,7 @@ SAZ.event.Observer = (function() {
 		 * @return	初期化できたらtrue、できなかったらfalse。
 		 */
 		initialize: function (target) {
-			if (target.addObserver!=null || target.removeObserver!=null || target.notify!=null) return false;
+			if (target._listeners!=null || target.addObserver!=null || target.removeObserver!=null || target.notify!=null) return false;
 			
 			target._listeners = {};
 			target.addObserver = _addObserver;
@@ -172,7 +167,7 @@ SAZ.event.Observer = (function() {
 			target.notify = _notify;
 			return true;
 		},
-		END:'END'
+		END:''
 	};
 }());
 

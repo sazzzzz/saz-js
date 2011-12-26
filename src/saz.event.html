@@ -17,16 +17,22 @@
 var o = {name:'o'};
 SAZ.event.Observer.initialize(o);
 o.addObserver('test',function(e){
-	console.log('test handler');
-	//console.dir(e);
+	console.log('o test handler');
 });
+
+var o2={name:'o2'};
+SAZ.event.Observer.initialize(o2);
+o2.addObserver('test2',function(e){
+	console.log('o2 test2')
+})
+
+o2.notify(new SAZ.event.Event('test2'));
 //o.notify('test',1);
 o.notify(new SAZ.event.Event('test'));
-console.log('o');
-//console.dir(o);
 
 
 var tim=setTimeout(function(){
+	o2.notify(new SAZ.event.Event('test2'));
 	o.notify(new SAZ.event.Event('test'));
 }, 1000);
 

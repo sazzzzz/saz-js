@@ -112,7 +112,7 @@ SAZ.util = (function() {
 		
 		
 		
-		END:'END'
+		END:''
 	};
 }());
 
