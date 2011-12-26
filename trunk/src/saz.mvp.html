@@ -13,6 +13,12 @@
 </head>
 <body>
 <h1>saz.js saz.mvp</h1>
+
+<div>
+<input type="text" id="strText" />
+<input type="text" id="numText" />
+</div>
+
 <script type="text/javascript">
 
 var str=new SAZ.mvp.Value('A');
@@ -29,9 +35,10 @@ num.addObserver(SAZ.mvp.Value.EVENT_CHANGED, function(e){
 	console.log(e.oldValue+','+e.newValue);
 });
 
-//console.dir(str);
-//console.dir(num);
-
+/*var bindUtil = SAZ.util.BindingUtil;
+bindUtil.bindProperty(document.getElementById('strText'), 'value', str);
+bindUtil.bindSetter(function(), value)
+*/
 var tim=setTimeout(function(){
 	str.setValue('B');
 	num.setValue(999);

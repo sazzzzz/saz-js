@@ -9,6 +9,7 @@ var SAZ = SAZ || {};
 // 名前空間
 SAZ.namespace('SAZ.X');
 SAZ.X = (function() {
+	console.log('SAZ.X');
 	
 	//
 	// 依存関係
@@ -17,27 +18,67 @@ SAZ.X = (function() {
 	//	ulang = SAZ.utils.lang;
 	
 	//
-	// プライベートプロパティ
+	// プライベートな「クラス」プロパティ
 	//
-	var Constr;
+	var Constr,
+		_privateStatic = 'privateStatic';
 	
 	//
 	// 初期化処理（があればこの辺で）
 	//
 	
-	// コンストラクタ
+	// パブリックAPI―コンストラクタ
 	Constr = function (arg1) {
-		this.prop1 = arg1;
+		console.log('--- SAZ.X コンストラクタ ---'+arg1);
+
+		console.log('STATIC='+SAZ.X.STATIC);
+		//console.log('STATIC='+this.STATIC);						// undefined
+		//console.log('STATIC='+STATIC);							// Error: STATIC is not defind
+		
+		console.log('_privateStatic='+_privateStatic);
+		//console.log('_privateStatic='+this._privateStatic);	// undefined
+
+		console.log('prop1='+this.prop1);
+		//console.log('prop1='+prop1);								// Error: prop1 is not defined
+		
+		this._name=arg1;
+		_privateStatic=arg1+':'+'this is private class prop.';
+		this.prop1=arg1+':'+'this is public prop.';
+		SAZ.X.STATIC=arg1+':'+'this is static prop.';
 	}
 	
-	// 静的プロパティ
-	Constr.PROP = 'prop';
+	// パブリックな「クラス」プロパティ（静的プロパティ）
+	Constr.STATIC = 'static';
 	
-	// プロトタイプ
+	// 記述方法
+	// privateClassProp, this.prop1, SAZ.X.STATIC
+	
+	// パブリックAPI―プロトタイプ
 	Constr.prototype = {
 		constructor: SAZ.X,
-		prop1: null,
-		prop2: null
+		
+		prop1: 'prop1',
+		prop2: 'prop2',
+		
+		_name: 'name',
+		
+		test: function(){
+			console.log('--- SAZ.X test ---'+this._name);
+
+			console.log('STATIC='+SAZ.X.STATIC);
+			//console.log('STATIC='+this.STATIC);						// undefined
+			//console.log('STATIC='+STATIC);							// Error: STATIC is not defind
+
+			console.log('_privateStatic='+_privateStatic);
+			//console.log('_privateStatic='+this._privateStatic);	// undefined
+
+			console.log('prop1='+this.prop1);
+			//console.log('prop1='+prop1);								// Error: prop1 is not defined
+		
+		},
+		getProp: function(){
+			return _privateStatic;
+		}
 	};
 	
 	// 新しい名前空間に代入されたコンストラクタを返す

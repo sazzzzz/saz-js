@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>_constructorTemplate</title>
+	<meta name="language" content="ja" />
+	
+	<script type="text/javascript" src="js/saz.js"></script>
+	<script type="text/javascript" src="js/saz.event.js"></script>
+	<script type="text/javascript" src="js/_constructorTemplate.js"></script>
+	
+</head>
+<body>
+<h1>_constructorTemplate</h1>
+
+<h3>記述方法</h3>
+<h4>パブリックな静的メンバ（クラスメンバ）</h4>
+<p>SAZ.X.STATIC（名前空間から記述）</p>
+<h4>プライベートな静的メンバ（クラスメンバ）</h4>
+<p>_privateStatic（thisなし）</p>
+<h4>パブリックプロパティ</h4>
+<p>this.prop1（thisつきで記述）</p>
+
+<script type="text/javascript">
+
+var i1 = new SAZ.X('inst1');
+i1.test();
+
+var i2 = new SAZ.X('inst2');
+i1.test();
+i2.test();
+
+</script>
+</body>
+</html>
