@@ -2,47 +2,80 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>saz.js saz.mvp</title>
-	<meta name="language" content="ja" />
-	
-	<script type="text/javascript" src="js/saz.js"></script>
-	<script type="text/javascript" src="js/saz.event.js"></script>
-	<script type="text/javascript" src="js/saz.mvp.js"></script>
-	
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>saz.js saz.mvp</title>
+<meta name="language" content="ja" />
+
+<link rel="stylesheet" type="text/css" href="css/base.css" media="all" />
+<style type="text/css">
+input{
+	width:200px;
+}
+</style>
+
+<script type="text/javascript" src="js/saz.js"></script>
+<script type="text/javascript" src="js/saz.event.js"></script>
+<script type="text/javascript" src="js/saz.mvp.js"></script>
+
 </head>
 <body>
 <h1>saz.js saz.mvp</h1>
 
 <div>
-<input type="text" id="strText" />
-<input type="text" id="numText" />
+str: <input type="text" id="strText" /><br/>
+num: <input type="text" id="numText" /><br/>
 </div>
 
 <script type="text/javascript">
 
+var strText=document.getElementById('strText');
+var numText=document.getElementById('numText');
+strText.value='-';
+numText.value='-';
+
 var str=new SAZ.mvp.Value('A');
 str.addObserver(SAZ.mvp.Value.EVENT_CHANGING, function(e){
 	console.log('str changing');
-	//console.dir(e);
 	console.log(e.oldValue+','+e.newValue);
 });
+str.setValue('B');
 
 var num=new SAZ.mvp.Value(99);
 num.addObserver(SAZ.mvp.Value.EVENT_CHANGED, function(e){
 	console.log('num changed');
-	//console.dir(e);
 	console.log(e.oldValue+','+e.newValue);
 });
 
-/*var bindUtil = SAZ.util.BindingUtil;
-bindUtil.bindProperty(document.getElementById('strText'), 'value', str);
-bindUtil.bindSetter(function(), value)
-*/
 var tim=setTimeout(function(){
-	str.setValue('B');
-	num.setValue(999);
+	str.setValue('D');
+	num.setValue(111);
 }, 1000);
+
+
+//
+// SAZ.mvp.ValueWatcher
+//
+var swatch=new SAZ.mvp.ValueWatcher();
+swatch.watch(str, function(e){
+	console.log('* ValueWatcher: '+e.oldValue+'>'+e.newValue);
+})
+
+
+str.setValue('C');
+num.setValue(100);
+swatch.unwatch();
+
+//
+// SAZ.mvp.BindingUtil
+//
+var bindUtil = SAZ.mvp.BindingUtil;
+bindUtil.bindProperty(strText, 'value', str);
+bindUtil.bindSetter(function(obj){
+	numText.value='new value is changed.';
+}, num);
+
+
+console.log('--- end ---');
 
 </script>
 </body>
