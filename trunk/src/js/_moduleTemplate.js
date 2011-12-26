@@ -51,7 +51,7 @@ SAZ.X = (function() {
 		isArray: function (target) {
 		},
 		
-		END:'END'
+		END:''
 	};
 }());
 
