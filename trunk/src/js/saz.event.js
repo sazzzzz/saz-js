@@ -69,7 +69,8 @@ SAZ.event.WatchEvent = (function() {
 	// コンストラクタ
 	Constr = function (type, target, oldValue, newValue) {
 		// 親コンストラクタ
-		Event.apply(this, [type,target]);
+		Event.apply(this, [type, target]);
+		
 		this.oldValue = oldValue;
 		this.newValue = newValue;
 	}

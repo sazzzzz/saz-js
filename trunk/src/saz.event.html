@@ -6,6 +6,7 @@
 	<title>saz.js saz.event</title>
 	<meta name="language" content="ja" />
 	
+	<script type="text/javascript" src="../libs/dojo/dojo.js"></script>
 	<script type="text/javascript" src="js/saz.js"></script>
 	<script type="text/javascript" src="js/saz.event.js"></script>
 	
@@ -37,9 +38,11 @@ var tim=setTimeout(function(){
 }, 1000);
 
 
-var we = new SAZ.event.WatchEvent('test', this, 'old', 'NEW!');
+var we1 = new SAZ.event.WatchEvent('test', this, 'old', 'NEW!');
+var we2 = new SAZ.event.WatchEvent('test2', this, 'old2', 'NEW!!');
 //console.log('WatchEvent');
-//console.dir(we);
+console.dir(we1);
+console.dir(we2);
 
 </script>
 </body>
