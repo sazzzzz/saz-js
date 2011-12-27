@@ -47,12 +47,18 @@ SAZ.inherit = (function () {
 		ChildClass.prototype = new F();
 		ChildClass.uber = ParentClass.prototype;
 		ChildClass.prototype.constructor = ChildClass;
+		//
+		//ChildClass.prototype.parent = ParentClass.prototype.constructor;
+		ChildClass.prototype.parent = ParentClass;
 	}
 }());
 
 
 
-
+/*SAZ.declare = function (className, superClass, classBody) {
+	dojo.declare(className, superClass, classBody);
+};*/
+SAZ.declare = dojo.declare;
 
 
 
