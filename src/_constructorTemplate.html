@@ -22,16 +22,31 @@
 <h4>プライベートな静的メンバ（クラスメンバ）</h4>
 <p>_privateStatic（thisなし）</p>
 <h4>パブリックプロパティ</h4>
-<p>this.prop1（thisつきで記述）</p>
+<p>this.proChild（thisつきで記述）</p>
 
 <script type="text/javascript">
 
-var i1 = new SAZ.X('inst1');
-i1.test();
+var parent1 = new SAZ.X.Parent('inst1');
+console.log('> parent1.test();');
+parent1.test();
 
-var i2 = new SAZ.X('inst2');
-i1.test();
-i2.test();
+var parent2 = new SAZ.X.Parent('inst2');
+console.log('> parent1.test();');
+parent1.test();
+console.log('> parent2.test();');
+parent2.test();
+console.log('***');
+
+var child1 = new SAZ.X.Child('inst3');
+console.log('> child1.test();');
+child1.test();
+//child1.test2();
+
+var child2 = new SAZ.X.Child('inst4');
+console.log('> child2.test();');
+child2.test();
+console.log('> parent1.test();');
+parent1.test();
 
 </script>
 </body>
