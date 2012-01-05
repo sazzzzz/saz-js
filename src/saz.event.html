@@ -7,6 +7,7 @@
 	<meta name="language" content="ja" />
 	
 	<script type="text/javascript" src="../libs/dojo/dojo.js"></script>
+	
 	<script type="text/javascript" src="js/saz.js"></script>
 	<script type="text/javascript" src="js/saz.event.js"></script>
 	
@@ -27,14 +28,14 @@ o2.addObserver('test2',function(e){
 	console.log('o2 test2')
 })
 
-o2.notify(new SAZ.event.Event('test2'));
-//o.notify('test',1);
-o.notify(new SAZ.event.Event('test'));
+o2.dispatchEvent(new SAZ.event.Event('test2'));
+//o.dispatchEvent('test',1);
+o.dispatchEvent(new SAZ.event.Event('test'));
 
 
 var tim=setTimeout(function(){
-	o2.notify(new SAZ.event.Event('test2'));
-	o.notify(new SAZ.event.Event('test'));
+	o2.dispatchEvent(new SAZ.event.Event('test2'));
+	o.dispatchEvent(new SAZ.event.Event('test'));
 }, 1000);
 
 
