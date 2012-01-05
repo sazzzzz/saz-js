@@ -17,10 +17,14 @@ SAZ.declare('SAZ.scene.Scene', null, {
 	},
 	// 配列やオブジェクトなど、プリミティブでない型をクラスメンバとして宣言してしまうと、自動的に"static"として扱われる
 	from: function(scene) {
-		return new dojo.Deferred();
+		var d = new dojo.Deferred();
+		d.resolve();
+		return d;
 	},
 	to: function(scene) {
-		return new dojo.Deferred();
+		var d = new dojo.Deferred();
+		d.resolve();
+		return d;
 	}
 });
 
@@ -57,32 +61,36 @@ SAZ.declare('SAZ.scene.SceneContainer', SAZ.scene.Scene, {
 		
 		//this.current_ = this.getScene_(id);
 		var src = this.current_,
-			dst = this.getScene_(id);
-		var def, defStart, defTo, defChange, defFrom, defComp;
+			dst = this.getScene_(id),
+			self = this;
+		//console.log('this.current_='+this.current_);
 		
+		var defStart, defChange, defFrom, defComp;
+		var defPrev;
 		if (src != null) {
-			defTo = new dojo.Deferred();
-			defTo.then(function() {
-				console.log('SceneContainer.change: src.to(scene);');
+			defStart = new dojo.Deferred();
+			defPrev = defStart.then(function() {
+				console.log('SceneContainer.change: src.to('+dst+');');
 				return src.to(dst);
 			});
-			def = defTo;
-			defStart = defTo;
 		}else{
-			def = new dojo.Deferred();
-			defStart = def;
+			defStart = new dojo.Deferred();
+			defPrev = defStart;
 		}
-		defChange = def.then(function() {
+		defChange = defPrev.then(function() {
 			console.log('SceneContainer.change: set current');
-			this.current_ = dst;
+			self.current_ = dst;
 		});
 		defFrom = defChange.then(function() {
-			console.log('SceneContainer.change: dst.from(scene);');
+			console.log('SceneContainer.change: dst.from('+src+');');
 			return dst.from(src);
 		});
 		defComp = defFrom.then(function() {
 			console.log('SceneContainer.change: complete');
 		});
+		
+		defStart.resolve();
+		return defComp;
 		
 		
 		/*if (src == null) {
@@ -105,9 +113,10 @@ SAZ.declare('SAZ.scene.SceneContainer', SAZ.scene.Scene, {
 			}).then(function() {
 				return dst.from(src)
 			});
-		}*/
+		}
 		def.resolve();
 		return defComp;
+		*/
 	}
 });
 // getter
