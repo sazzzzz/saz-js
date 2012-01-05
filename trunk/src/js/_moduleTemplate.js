@@ -19,14 +19,14 @@ SAZ.X = (function() {
 	//
 	// プライベートプロパティ
 	//
-	var _array_string = '[object Array]',
-		_oToString = Object.prototype.toString,
-		_aSlice = Array.prototype.slice;
+	var array_string_ = '[object Array]',
+		oToString_ = Object.prototype.toString,
+		aSlice_ = Array.prototype.slice;
 	
 	//
 	// プライベートメソッド
 	//
-	_hoge = function () {
+	hoge_ = function () {
 		//
 	};
 	
