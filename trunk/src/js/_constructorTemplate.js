@@ -42,7 +42,7 @@ SAZ.X.Parent = (function() {
 		_privateStatic=arg1+':'+'this is private class prop.';
 		this.prop1=arg1+':'+'this is public prop.';
 		SAZ.X.Parent.STATIC=arg1+':'+'this is static prop.';
-	}
+	};
 	
 	// パブリックな「クラス」プロパティ（静的プロパティ）
 	Constr.STATIC = 'static';

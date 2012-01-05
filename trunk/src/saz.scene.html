@@ -11,20 +11,33 @@
 	position: absolute;
 	width: 640px;
 	height: 480px;
-	background: #ccc;
-	border: 1px solid #999;
+	color: #ccc;
+	background: #666;
+	border: 1px dotted #999;
 	
 	text-align: center;
 	font-family: 'Verdana', sans-serif;
 	font-size: 100px;
 	line-height: 480px;
 }
+.navi li{
+	float: left;
+	list-style: none;
+	margin-right: 1px;
+	padding: 0 10px;
+	background: #ccc;
+}
+.page{
+	clear: both;
+	margin-top: 30px;
+}
 </style>
 </head>
 <body>
 <h1>saz.js saz.scene</h1>
 <div id="container">
-<ul>
+<p>クリック↓</p>
+<ul class="navi">
 	<li id="intro">intro</li>
 	<li id="top">top</li>
 </ul>
@@ -42,23 +55,14 @@
 
 <script type="text/javascript">
 
-var introBtn = dojo.byId('intro');
-dojo.connect(introBtn, 'onclick', function() {
-	sman.change('intro').then(function() {
-		console.log('COMP!')
-	});
-});
-dojo.connect(dojo.byId('top'), 'onclick', function() {
-	sman.change('top').then(function() {
-		console.log('COMP!')
-	});
-});
-
+// init DOM
 var introPage = dojo.byId('introPage');
 var topPage = dojo.byId('topPage');
 dojo.style(introPage, 'opacity', 0);
 dojo.style(topPage, 'opacity', 0);
 
+
+// Scene
 var intro = new SAZ.scene.Scene('intro');
 intro.from = function(scene) {
 	console.log('intro.from');
@@ -88,15 +92,26 @@ top.to = function(scene) {
 	return d;
 };
 
+// SceneContainer
 var sman = new SAZ.scene.SceneContainer('main');
 sman.add(intro);
 sman.add(top);
 console.log('sman.currentId='+sman.currentId);
 console.dir(sman.current);
 
-/*sman.change('intro').then(function() {
-	console.log('COMP!')
-});*/
+
+// ボタン設定
+dojo.connect(dojo.byId('intro'), 'onclick', function() {
+	sman.change('intro').then(function() {
+		console.log('COMP!')
+	});
+});
+dojo.connect(dojo.byId('top'), 'onclick', function() {
+	sman.change('top').then(function() {
+		console.log('COMP!')
+	});
+});
+
 //console.log('sman.currentId='+sman.currentId);
 //console.dir(sman.current);
 

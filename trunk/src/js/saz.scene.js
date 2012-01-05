@@ -9,6 +9,20 @@ var SAZ = SAZ || {};
 SAZ.namespace('SAZ.scene');
 
 
+
+// 名前空間
+//SAZ.namespace('SAZ.scene.Scene');
+/*SAZ.scene.Scene = (function() {
+	var Constr;
+	Constr = function (id) {
+	};
+	Constr.prototype = {
+		constructor: SAZ.scene.Scene
+	};
+	return Constr;
+	
+}());*/
+
 SAZ.declare('SAZ.scene.Scene', null, {
 	id: '',
 	// コンストラクタ
@@ -28,8 +42,15 @@ SAZ.declare('SAZ.scene.Scene', null, {
 	}
 });
 
-// 配列やオブジェクトなど、プリミティブでない型をクラスメンバとして宣言してしまうと、自動的に"static"として扱われる
+
+// 名前空間
+//SAZ.namespace('SAZ.scene.SceneContainer');
+/**
+ * Sceneのコンテナ. 
+ * TODO	コンテナの入れ子サポート。Sceneの順番サポート。
+ */
 SAZ.declare('SAZ.scene.SceneContainer', SAZ.scene.Scene, {
+	// 配列やオブジェクトなど、プリミティブでない型をクラスメンバとして宣言してしまうと、自動的に"static"として扱われる
 	
 	// コンストラクタ
 	constructor: function(id) {
