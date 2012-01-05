@@ -40,8 +40,21 @@ SAZ.deferred = (function() {
 		 * @return	{Function} 作成されたthen用Function.
 		 */
 		thenTween: function(tween) {
+			//console.log('thenTween');
+			// Tweenインスタンスは、作成した瞬間から再生してしまうことを考慮してなかった。ポーズするよう修正。
+			// Timelineを利用してポーズ
+			var tl = new Timeline([tween],{start:0});
+			tl.gotoAndStop(0);
+			
 			return function() {
-				return SAZ.deferred.tween(tween);
+				//console.log('thenTween func');
+				var d = new Deferred_();
+				tween.call(function() {
+					d.resolve();
+				})
+				// ここで再生開始
+				tl.gotoAndPlay(0);
+				return d;
 			};
 		},
 		

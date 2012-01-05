@@ -7,29 +7,38 @@
 <meta name="language" content="ja" />
 
 <style type="text/css">
-.page{
-	position: absolute;
-	width: 640px;
-	height: 480px;
-	color: #ccc;
-	background: #666;
-	border: 1px dotted #999;
-	
-	text-align: center;
-	font-family: 'Verdana', sans-serif;
-	font-size: 100px;
-	line-height: 480px;
-}
 .navi li{
 	float: left;
 	list-style: none;
 	margin-right: 1px;
 	padding: 0 10px;
 	background: #ccc;
+	font-weight: bold;
+}
+#navHilite{
+	position: absolute;
+	width: 30px;
+	height: 4px;
+	background: #f66;
 }
 .page{
+	position: absolute;
 	clear: both;
+	
+	width: 640px;
+	height: 480px;
 	margin-top: 30px;
+	color: #ccc;
+	background: #666;
+	border: 1px dotted #999;
+}
+.page h2{
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	font-family: 'Verdana', sans-serif;
+	font-size: 100px;
+	line-height: 480px;
 }
 </style>
 </head>
@@ -41,8 +50,9 @@
 	<li id="intro">intro</li>
 	<li id="top">top</li>
 </ul>
-<div class="page" id="introPage">Intro</div>
-<div class="page" id="topPage">Top</div>
+<div id="navHilite"></div>
+<div class="page" id="introPage"><h2>Intro</h2></div>
+<div class="page" id="topPage"><h2>Top</h2></div>
 </div>
 
 <script type="text/javascript" src="../libs/dojo/dojo.js"></script>
@@ -58,15 +68,36 @@
 // init DOM
 var introPage = dojo.byId('introPage');
 var topPage = dojo.byId('topPage');
-dojo.style(introPage, 'opacity', 0);
-dojo.style(topPage, 'opacity', 0);
+
+dojo.query('.page').style('opacity', 0);
+dojo.query('#topPage>h2').style('opacity', 0);
+
+var navHilite = dojo.byId('navHilite');
+// 座標
+var introPos = dojo.coords(dojo.byId('intro'));
+dojo.style(navHilite, {
+	'top': (introPos.t + introPos.h + 1) + 'px',
+	'left': '0px',
+	'width': (introPos.w - 1) + 'px'
+});
 
 
 // Scene
 var intro = new SAZ.scene.Scene('intro');
 intro.from = function(scene) {
 	console.log('intro.from');
-	return SAZ.deferred.tween(Tween.get(introPage.style, {css:true}).to({opacity:1},1000));
+	//return SAZ.deferred.tween(Tween.get(introPage.style, {css:true}).to({opacity:1},1000));
+	var pos = dojo.coords(dojo.byId('intro'));
+	var p = SAZ.deferred.tween(
+		Tween.get(introPage.style, {css:true}).to({opacity:1},1000)
+	);
+	var n = SAZ.deferred.tween(
+		Tween.get(navHilite.style, {css:true}).to({left:pos.l, width:pos.w-1}, 1000, Ease.backOut)
+	);
+	// DeferredListで並列処理
+	dojo.require('dojo.DeferredList');
+	var d = new dojo.DeferredList([p,n]);
+	return d;
 };
 intro.to = function(scene) {
 	console.log('intro.to');
@@ -76,19 +107,31 @@ intro.to = function(scene) {
 var top = new SAZ.scene.Scene('top');
 top.from = function(scene) {
 	console.log('top.from');
-	// 1秒待つ
-	var d = SAZ.deferred.wait(1000);
-	d.then(SAZ.deferred.thenTween(Tween.get(topPage.style, {css:true}).to({opacity:1},1000)));
-	return d;
+	
+	// 順番に実行したい: Deferredを使った場合
+	
+	var pos = dojo.coords(dojo.byId('top'));
+	var d = new dojo.Deferred();
+	var res = d.then(SAZ.deferred.thenTween(Tween.get(navHilite.style, {css:true}).to({left:pos.l, width:pos.w-1}, 1000, Ease.backOut)))
+		.then(SAZ.deferred.thenWait(1000))	// 1秒待つ
+		.then(SAZ.deferred.thenTween(Tween.get(topPage.style, {css:true}).to({opacity:1},1000)))
+		.then(SAZ.deferred.thenTween(Tween.get(dojo.query('#topPage>h2')[0].style, {css:true}).to({opacity:1},1000)));
+	// Deferredを忘れずに実行する
+	d.resolve();
+	// チェインの最後のDeferredを返す
+	return res;
 };
 top.to = function(scene) {
 	console.log('top.to');
-	// 1秒待つ
+	
+	// 順番に実行したい: Tweenを使って書いてみる
+	
 	var d = new dojo.Deferred();
-	setTimeout(function(){
+	// NodeListからDOMを取り出すには、[index]を使う
+	Tween.get(dojo.query('#topPage>h2')[0].style, {css:true}).to({opacity:0},1000);
+	Tween.get(topPage.style, {css:true}).wait(1000).to({opacity:0},1000).call(function(){
 		d.resolve();
-	},1000);
-	d.then(SAZ.deferred.thenTween(Tween.get(topPage.style, {css:true}).to({opacity:0},1000)));
+	});
 	return d;
 };
 
@@ -96,24 +139,19 @@ top.to = function(scene) {
 var sman = new SAZ.scene.SceneContainer('main');
 sman.add(intro);
 sman.add(top);
-console.log('sman.currentId='+sman.currentId);
-console.dir(sman.current);
 
 
 // ボタン設定
 dojo.connect(dojo.byId('intro'), 'onclick', function() {
 	sman.change('intro').then(function() {
-		console.log('COMP!')
+		console.log('+ COMP! +')
 	});
 });
 dojo.connect(dojo.byId('top'), 'onclick', function() {
 	sman.change('top').then(function() {
-		console.log('COMP!')
+		console.log('+ COMP! +')
 	});
 });
-
-//console.log('sman.currentId='+sman.currentId);
-//console.dir(sman.current);
 
 </script>
 
