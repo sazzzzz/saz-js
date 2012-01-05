@@ -23,6 +23,12 @@ SAZ.namespace('SAZ.scene');
 	
 }());*/
 
+/**
+ * Scene. 
+ * @see	APIは<a href='http://rozenkranz.blog.shinobi.jp/Entry/77/' target='_blank' title='rozen kranz'>rozen kranz</a>にインスパイア。 
+ */
+// TODO	Sceneの相対参照サポート。
+// next, previous, parent
 SAZ.declare('SAZ.scene.Scene', null, {
 	id: '',
 	// コンストラクタ
@@ -47,8 +53,9 @@ SAZ.declare('SAZ.scene.Scene', null, {
 //SAZ.namespace('SAZ.scene.SceneContainer');
 /**
  * Sceneのコンテナ. 
- * TODO	コンテナの入れ子サポート。Sceneの順番サポート。
  */
+// TODO	コンテナの入れ子サポート。Sceneの相対参照サポート。
+// next, previous, parent, root, getSceneAt(index), getSceneIndex(scene)
 SAZ.declare('SAZ.scene.SceneContainer', SAZ.scene.Scene, {
 	// 配列やオブジェクトなど、プリミティブでない型をクラスメンバとして宣言してしまうと、自動的に"static"として扱われる
 	
@@ -91,7 +98,7 @@ SAZ.declare('SAZ.scene.SceneContainer', SAZ.scene.Scene, {
 		if (src != null) {
 			defStart = new dojo.Deferred();
 			defPrev = defStart.then(function() {
-				console.log('SceneContainer.change: src.to('+dst+');');
+				//console.log('SceneContainer.change: src.to('+dst+');');
 				return src.to(dst);
 			});
 		}else{
@@ -99,15 +106,15 @@ SAZ.declare('SAZ.scene.SceneContainer', SAZ.scene.Scene, {
 			defPrev = defStart;
 		}
 		defChange = defPrev.then(function() {
-			console.log('SceneContainer.change: set current');
+			//console.log('SceneContainer.change: set current');
 			self.current_ = dst;
 		});
 		defFrom = defChange.then(function() {
-			console.log('SceneContainer.change: dst.from('+src+');');
+			//console.log('SceneContainer.change: dst.from('+src+');');
 			return dst.from(src);
 		});
 		defComp = defFrom.then(function() {
-			console.log('SceneContainer.change: complete');
+			//console.log('SceneContainer.change: complete');
 		});
 		
 		defStart.resolve();
