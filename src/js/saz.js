@@ -52,7 +52,7 @@ SAZ = (function() {
 		 * @param	{Object}	classBody	クラスメンバを定義するオブジェクト。
 		 */
 		declare: function (className, superClass, classBody) {
-			dojo.declare(className, superClass, classBody);
+			//dojo.declare(className, superClass, classBody);
 		},
 		
 		/**

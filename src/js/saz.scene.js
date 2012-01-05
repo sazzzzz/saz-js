@@ -5,9 +5,10 @@ saz.js
 
 // ルート
 var SAZ = SAZ || {};
-
 // 名前空間
 SAZ.namespace('SAZ.scene');
+
+
 SAZ.declare('SAZ.scene.Scene', null, {
 	id: '',
 	// コンストラクタ
@@ -52,21 +53,49 @@ SAZ.declare('SAZ.scene.SceneContainer', SAZ.scene.Scene, {
 		this.scenes_[scene.id] = scene;
 	},
 	change: function(id) {
-		//this.current_ = this.getScene_(id);
-		var def = new dojo.Deferred(),
-			src = this.current_,
-			dst = this.getScene_(id);
-		if (dst === null) return;
+		if (this.getScene_(id) == null) throw new Error('SAZ.scene.SceneContainer#change: 移動先が見つかりません。');
 		
-		if (src === null) {
+		//this.current_ = this.getScene_(id);
+		var src = this.current_,
+			dst = this.getScene_(id);
+		var def, defStart, defTo, defChange, defFrom, defComp;
+		
+		if (src != null) {
+			defTo = new dojo.Deferred();
+			defTo.then(function() {
+				console.log('SceneContainer.change: src.to(scene);');
+				return src.to(dst);
+			});
+			def = defTo;
+			defStart = defTo;
+		}else{
+			def = new dojo.Deferred();
+			defStart = def;
+		}
+		defChange = def.then(function() {
+			console.log('SceneContainer.change: set current');
+			this.current_ = dst;
+		});
+		defFrom = defChange.then(function() {
+			console.log('SceneContainer.change: dst.from(scene);');
+			return dst.from(src);
+		});
+		defComp = defFrom.then(function() {
+			console.log('SceneContainer.change: complete');
+		});
+		
+		
+		/*if (src == null) {
 			def.then(function() {
-				console.log('set current');
+				console.log('SceneContainer.change: set current');
 				this.current_ = dst;
-			}).then(function() {
-				console.log('dst.from(scene);');
+			});
+			var defFrom = def.then(function() {
+				console.log('SceneContainer.change: dst.from(scene);');
 				return dst.from(src);
-			}).then(function() {
-				console.log('complete');
+			});
+			var defComp = defFrom.then(function() {
+				console.log('SceneContainer.change: complete');
 			});
 		}else{
 			src.to(
@@ -76,9 +105,9 @@ SAZ.declare('SAZ.scene.SceneContainer', SAZ.scene.Scene, {
 			}).then(function() {
 				return dst.from(src)
 			});
-		}
+		}*/
 		def.resolve();
-		return def;
+		return defComp;
 	}
 });
 // getter
