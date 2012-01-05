@@ -8,7 +8,7 @@ var SAZ = SAZ || {};
 
 // 名前空間
 SAZ.namespace('SAZ.scene');
-dojo.declare('SAZ.scene.Scene', null, {
+SAZ.declare('SAZ.scene.Scene', null, {
 	id: '',
 	// コンストラクタ
 	constructor: function(id) {
@@ -24,7 +24,7 @@ dojo.declare('SAZ.scene.Scene', null, {
 });
 
 // 配列やオブジェクトなど、プリミティブでない型をクラスメンバとして宣言してしまうと、自動的に"static"として扱われる
-dojo.declare('SAZ.scene.SceneContainer', SAZ.scene.Scene, {
+SAZ.declare('SAZ.scene.SceneContainer', SAZ.scene.Scene, {
 	
 	// コンストラクタ
 	constructor: function(id) {

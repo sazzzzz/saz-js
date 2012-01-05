@@ -102,22 +102,20 @@ SAZ.event.Observer = (function() {
 	//
 	// プライベートプロパティ
 	//
-	var _array_string = '[object Array]',
-		_oToString = Object.prototype.toString,
-		_aSlice = Array.prototype.slice;
+	//var array_string_ = '[object Array]';
 	
 	//
 	// プライベートメソッド
 	//
-	_addObserver = function (type, listener, context) {
-		var listeners = this._listeners;
+	addObserver_ = function (type, listener, context) {
+		var listeners = this.listeners_;
 		if (!listeners[type]) {
 			listeners[type] = [];
 		}
 		listeners[type].push([listener, context]);		
 	};
-	_removeObserver = function (type, listener) {
-		var listeners = this._listeners;
+	removeObserver_ = function (type, listener) {
+		var listeners = this.listeners_;
 		if(listeners[type]){
 			var i;
 			var len = listeners[type].length;
@@ -129,8 +127,8 @@ SAZ.event.Observer = (function() {
 			}
 		}		
 	};
-	_notify = function (e) {
-		var listeners = this._listeners;
+	dispatchEvent_ = function (e) {
+		var listeners = this.listeners_;
 		//var e = new SAZ.event.Event(type, this);
 		var type = e.type;
 		if(listeners[type]){
@@ -156,16 +154,17 @@ SAZ.event.Observer = (function() {
 		
 		/**
 		 * 対象オブジェクトをObserverとして初期化。
-		 * addObserver、removeObserver、notifyの3つのメソッドを追加。すでにメンバが定義されていたら中断。
+		 * addObserver、removeObserver、dispatchEventの3つのメソッドを追加。すでにメンバが定義されていたら中断。
 		 * @return	初期化できたらtrue、できなかったらfalse。
 		 */
 		initialize: function (target) {
-			if (target._listeners!=null || target.addObserver!=null || target.removeObserver!=null || target.notify!=null) return false;
+			if (target.listeners_!=null || target.addObserver!=null || target.removeObserver!=null || target.dispatchEvent!=null) return false;
 			
-			target._listeners = {};
-			target.addObserver = _addObserver;
-			target.removeObserver = _removeObserver;
-			target.notify = _notify;
+			target.listeners_ = {};
+			if(target.addObserver==null)target.addObserver = addObserver_;
+			if(target.removeObserver==null)target.removeObserver = removeObserver_;
+			if(target.dispatchEvent==null)target.dispatchEvent = dispatchEvent_;
+			//SAZ.mixin(target, this, ['addObserver', 'removeObserver', 'dispatchEvent'], ['addObserver_', 'removeObserver_', 'dispatchEvent_'])
 			return true;
 		},
 		END:''
