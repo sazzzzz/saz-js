@@ -18,7 +18,7 @@ SAZ.X.Parent = (function() {
 	// プライベートな「クラス」プロパティ
 	//
 	var Constr,
-		_privateStatic = 'privateStatic';
+		privateStatic_ = 'privateStatic';
 	
 	//
 	// 初期化処理（があればこの辺で）
@@ -32,14 +32,14 @@ SAZ.X.Parent = (function() {
 		//console.log('STATIC='+this.STATIC);						// undefined
 		//console.log('STATIC='+STATIC);							// Error: STATIC is not defind
 		
-		console.log('_privateStatic='+_privateStatic);
-		//console.log('_privateStatic='+this._privateStatic);	// undefined
+		console.log('privateStatic_='+privateStatic_);
+		//console.log('privateStatic_='+this.privateStatic_);	// undefined
 
 		console.log('prop1='+this.prop1);
 		//console.log('prop1='+prop1);								// Error: prop1 is not defined
 		
-		this._name=arg1;
-		_privateStatic=arg1+':'+'this is private class prop.';
+		this.name_=arg1;
+		privateStatic_=arg1+':'+'this is private class prop.';
 		this.prop1=arg1+':'+'this is public prop.';
 		SAZ.X.Parent.STATIC=arg1+':'+'this is static prop.';
 	};
@@ -57,7 +57,12 @@ SAZ.X.Parent = (function() {
 		prop1: 'prop1',
 		prop2: 'prop2',
 		
-		_name: 'name',
+		name_: 'name',
+		current_: '',
+		
+		getCurrent_: function() {
+			return current_;
+		},
 		
 		/**
 		 * テストメソッド.
@@ -65,14 +70,14 @@ SAZ.X.Parent = (function() {
 		 * @return	{String} 戻り値の説明.
 		 */
 		test: function(dum){
-			console.log('--- SAZ.X.Parent test() ---'+this._name);
+			console.log('--- SAZ.X.Parent test() ---'+this.name_);
 
 			console.log('STATIC='+SAZ.X.Parent.STATIC);
 			//console.log('STATIC='+this.STATIC);						// undefined
 			//console.log('STATIC='+STATIC);							// Error: STATIC is not defind
 
-			console.log('_privateStatic='+_privateStatic);
-			//console.log('_privateStatic='+this._privateStatic);	// undefined
+			console.log('privateStatic_='+privateStatic_);
+			//console.log('privateStatic_='+this.privateStatic_);	// undefined
 			console.log('getProp()='+this.getProp());
 
 			console.log('prop1='+this.prop1);
@@ -81,7 +86,7 @@ SAZ.X.Parent = (function() {
 			return 'test';
 		},
 		getProp: function(){
-			return _privateStatic;
+			return privateStatic_;
 		}
 	};
 	
@@ -89,6 +94,9 @@ SAZ.X.Parent = (function() {
 	return Constr;
 	
 }());
+// getter
+SAZ.X.Parent.prototype.__defineGetter__("current", SAZ.X.Parent.prototype.getCurrent_);
+
 
 //
 // FIXME	継承はうまく動作しない。保留中。
@@ -106,7 +114,7 @@ SAZ.X.Child = (function() {
 	// プライベートな「クラス」プロパティ
 	//
 	var Constr,
-		_privateStatic = 'privateStatic@Child';
+		privateStatic_ = 'privateStatic@Child';
 	
 	//
 	// 初期化処理（があればこの辺で）
@@ -120,8 +128,8 @@ SAZ.X.Child = (function() {
 		this.parent(arg1);
 		//Parent.apply(this, [arg1]);
 		
-		this._name=arg1;
-		_privateStatic=arg1+':'+'this is private class prop.@Child';
+		this.name_=arg1;
+		privateStatic_=arg1+':'+'this is private class prop.@Child';
 		this.prop1=arg1+':'+'this is public prop.@Child';
 		SAZ.X.Child.STATIC=arg1+':'+'this is static prop.@Child';
 	}
@@ -137,16 +145,16 @@ SAZ.X.Child = (function() {
 		constructor: SAZ.X,
 		
 		// override
-		_name: 'name@Child',
+		name_: 'name@Child',
 		
 		getProp: function(){
-			return _privateStatic+'@Child';
+			return privateStatic_+'@Child';
 		},
 		test2: function(){
-			console.log('--- SAZ.X.Child test2() ---'+this._name);
+			console.log('--- SAZ.X.Child test2() ---'+this.name_);
 
 			console.log('STATIC='+SAZ.X.Child.STATIC);
-			console.log('_privateStatic='+_privateStatic);
+			console.log('privateStatic_='+privateStatic_);
 			console.log('getProp()='+this.getProp());
 			console.log('prop1='+this.prop1);
 			return 'test2';
