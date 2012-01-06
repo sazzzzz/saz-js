@@ -116,9 +116,10 @@ top.from = function(scene) {
 		.then(SAZ.deferred.thenWait(1000))	// 1秒待つ
 		.then(SAZ.deferred.thenTween(Tween.get(topPage.style, {css:true}).to({opacity:1},1000)))
 		.then(SAZ.deferred.thenTween(Tween.get(dojo.query('#topPage>h2')[0].style, {css:true}).to({opacity:1},1000)));
-	// Deferredを忘れずに実行する
+	
+	// 「最初の」Deferredを忘れずに実行する
 	d.resolve();
-	// チェインの最後のDeferredを返す
+	// チェインの「最後の」Deferredを返す
 	return res;
 };
 top.to = function(scene) {
@@ -126,10 +127,12 @@ top.to = function(scene) {
 	
 	// 順番に実行したい: Tweenを使って書いてみる
 	
+	// 次につなぐためだけに、空のDeferredを生成
 	var d = new dojo.Deferred();
 	// NodeListからDOMを取り出すには、[index]を使う
 	Tween.get(dojo.query('#topPage>h2')[0].style, {css:true}).to({opacity:0},1000);
 	Tween.get(topPage.style, {css:true}).wait(1000).to({opacity:0},1000).call(function(){
+		// 空Deferredを忘れずに実行する
 		d.resolve();
 	});
 	return d;
