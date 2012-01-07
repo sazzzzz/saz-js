@@ -28,14 +28,14 @@ o2.addObserver('test2',function(e){
 	console.log('o2 test2')
 })
 
-o2.dispatchEvent(new SAZ.event.Event('test2'));
-//o.dispatchEvent('test',1);
-o.dispatchEvent(new SAZ.event.Event('test'));
+o2.dispatch(new SAZ.event.Event('test2'));
+//o.dispatch('test',1);
+o.dispatch(new SAZ.event.Event('test'));
 
 
 var tim=setTimeout(function(){
-	o2.dispatchEvent(new SAZ.event.Event('test2'));
-	o.dispatchEvent(new SAZ.event.Event('test'));
+	o2.dispatch(new SAZ.event.Event('test2'));
+	o.dispatch(new SAZ.event.Event('test'));
 }, 1000);
 
 
