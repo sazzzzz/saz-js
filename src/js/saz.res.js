@@ -64,8 +64,11 @@ SAZ.res = (function() {
 
 
 
-
+/**
+ * 複数ロードするインターフェース. 
+ */
 SAZ.res.IMultiLoader = SAZ.declare('SAZ.res.IMultiLoader', null, {
+	
 	EVENT_START: 'start',
 	EVENT_PROGRESS: 'progress',
 	EVENT_COMPLETE: 'complete',
@@ -164,11 +167,12 @@ SAZ.res.SerialImageLoader = SAZ.declare('SAZ.res.SerialImageLoader', SAZ.res.IMu
 	},
 	
 	makeResolve_: function(url,index) {
+		var self = this;
 		return function(){
-			console.log('SAZ.res.SerialImageLoader: 画像ロードできた: '+url);
-			var event = new SAZ.event.Event(this.EVENT_PROGRESS);
+			//console.log('SAZ.res.SerialImageLoader: 画像ロードできた: '+url);
+			var event = new SAZ.event.Event(self.EVENT_PROGRESS,self);
 			event.index = index;
-			this.dispatch(event);
+			self.dispatch(event);
 			return SAZ.res.imageGet(url);
 		};
 	},
@@ -199,15 +203,15 @@ SAZ.res.SerialImageLoader = SAZ.declare('SAZ.res.SerialImageLoader', SAZ.res.IMu
 		def.then(
 			function(){
 				self.state_ = self.STATE_LOADED;
-				self.dispatch(new SAZ.event.Event(this.EVENT_COMPLETE));
+				self.dispatch(new SAZ.event.Event(self.EVENT_COMPLETE,self));
 				compDef.resolve();
 			},function(){
 				
 			}
 		);
 		
+		this.dispatch(new SAZ.event.Event(this.EVENT_START,self));
 		this.startDef_.resolve();
-		this.dispatch(new SAZ.event.Event(this.EVENT_START));
 		return compDef;
 	},
 	
