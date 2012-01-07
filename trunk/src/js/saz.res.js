@@ -13,18 +13,12 @@ SAZ.res = (function() {
 	//
 	// 依存関係
 	//
-	//var uobj = SAZ.utils.object,
-	//	ulang = SAZ.utils.lang;
+	var Deferred = dojo.Deferred;
 	
 	//
 	// プライベートプロパティ
 	//
-//	var array_string_ = '[object Array]';
-	
-	
-	//
-	// 初期化処理（があればこの辺で）
-	//
+	//var array_string_ = '[object Array]';
 	
 	
 	//
@@ -33,7 +27,7 @@ SAZ.res = (function() {
 	return {
 		
 		/**
-		 * 画像をロード
+		 * 画像をロード. 
 		 * 
 		 * @param	{String}	url	画像のURL.
 		 * @return	{Object}	Deferred.
@@ -42,13 +36,20 @@ SAZ.res = (function() {
 			var def = new dojo.Deferred();
 			
 			var image = new Image();
-			image.onload = function() {
-				def.resolve();
+			image.onload = function(e) {
+				//console.log('image.onload:'+url);
+				//console.dir(arguments[0]);
+				def.resolve(e);
 			};
-			image.onerror = function() {
+			image.onerror = function(e) {
+				console.log('image.onerror:'+url);
+				//console.dir(arguments[0]);
+				//def.reject(e);	//dojoのエラーが
 				def.reject();
 			};
-			image.onabort = function() {
+			image.onabort = function(e) {
+				console.log('image.onabort:'+url);
+				//def.reject(e);	//dojoのエラーが
 				def.reject();
 			};
 			image.src = url;
@@ -56,74 +57,211 @@ SAZ.res = (function() {
 			return def;
 		},
 		
-		/**
-		 * 配列かどうか調べる. 
-		 * @param	{Object} target 調べるオブジェクト.
-		 * @return	{Boolean} 配列ならtrue、そうでないならfalse.
-		 */
-		isArray: function (target) {
-		},
-		
 		END:''
 	};
 }());
 
 
-// ILoaderインターフェース
-//SAZ.declare('SAZ.res.ILoader', null, {
-//	EVENT_START: 'start',
-//	//EVENT_PROGRESS: 'progress',
-//	EVENT_COMPLETE: 'complete',
-//	
-//	url_: '',
-//	
-//	/**
-//	 * コンストラクタ. 
-//	 */
-//	constructor: function() {
-//		this.image_ = new Image();
-//		this.image_.onload = this.image_onload_;
-//		
-//		SAZ.event.Observer.initialize(this);
-//	},
-//	
-//	image_onload_: function() {
-//		
-//	},
-//	getImage_: function() {
-//		return this.image_;
-//	},
-//	
-//	/**
-//	 * ロードする. 
-//	 * 
-//	 * @param	{String}	url	画像URL. 
-//	 */
-//	load: function(url) {
-//		this.url_ = url;
-//		this.image_.src = url;
-//	},
-//	unload: function() {
-//		
-//	},
-//	
-//	END: ''
-//});
-//// getter
-//SAZ.res.ILoader.prototype.__defineGetter__("image", SAZ.res.ILoader.prototype.getImage_);
 
 
 
-SAZ.declare('SAZ.res.IMultiLoader', SAZ.res.ILoader, {
+SAZ.res.IMultiLoader = SAZ.declare('SAZ.res.IMultiLoader', null, {
+	EVENT_START: 'start',
+	EVENT_PROGRESS: 'progress',
+	EVENT_COMPLETE: 'complete',
 	
-	// コンストラクタ
-	constructor: function(params) {
-		
+	STATE_INIT: 'init',
+	STATE_READY: 'ready',
+	STATE_LOADING: 'loading',
+	STATE_LOADED: 'loaded',
+	
+	
+	/**
+	 * コンストラクタ. 
+	 */
+	constructor: function() {
 	},
 	
-	addUrl: function(urlOrUrls) {
-		
+	
+	/**
+	 * ロード開始. 
+	 */
+	start: function() {
+	},
+	
+	/**
+	 *ロード停止. 
+	 */
+	stop: function() {
+	},
+	
+	/**
+	 * ロードするURLを追加. 
+	 * 
+	 * @param	{String}	url	画像URL. 
+	 */
+	addUrl: function(url) {
+	},
+	
+	/**
+	 * ロードするURLを複数追加. 
+	 * 
+	 * @param	{Array}	urls	画像URLの配列. 
+	 */
+	addUrls: function(urls) {
+	},
+	
+	/**
+	 * URLを消去. 
+	 */
+	clearUrl: function() {
 	},
 	
 	END: ''
 });
+
+
+/**
+ * 画像を順番にロードするクラス. 
+ *
+ * @class	SerialImageLoader
+ * @namespace	SAZ.res
+ * 
+ * var sil = new SAZ.res.SerialImageLoader();
+ * sil.addUrl('js/images/DemoHandcursor.png');
+ * sil.addUrl('js/images/GameReplayButton.png');
+ * sil.addUrl('js/images/GameStartButton.png');
+ * sil.start().then(
+ * 	function(){
+ * 		console.log('SerialImageLoader: comp');
+ * 	}
+ * );
+ */
+SAZ.res.SerialImageLoader = SAZ.declare('SAZ.res.SerialImageLoader', SAZ.res.IMultiLoader, {
+	//依存関係
+	SE_: SAZ.event,
+	SU_: SAZ.util,
+	
+	state_: '',
+	
+	/**
+	 * コンストラクタ. 
+	 */
+	constructor: function() {
+		this.urls_ = [];
+		this.startDef_ = null;
+		this.state_ = this.STATE_INIT;
+		
+		SAZ.event.Observer.initialize(this);
+	},
+	
+	getState_: function() {
+		return this.state_;
+	},
+	
+	getCount_: function() {
+		return this.urls_.length;
+	},
+	
+	makeResolve_: function(url,index) {
+		return function(){
+			console.log('SAZ.res.SerialImageLoader: 画像ロードできた: '+url);
+			var event = new SAZ.event.Event(this.EVENT_PROGRESS);
+			event.index = index;
+			this.dispatch(event);
+			return SAZ.res.imageGet(url);
+		};
+	},
+	makeReject_: function(url,index) {
+		return function(){
+			console.log('SAZ.res.SerialImageLoader: 画像ロードエラー: '+url);
+		}
+	},
+	
+	/**
+	 * ロード開始. 
+	 */
+	start: function() {
+		this.state_ = this.STATE_LOADING;
+		
+		this.startDef_ = new dojo.Deferred();
+		var def = this.startDef_;
+		//var url;
+		for(var i=0,n=this.urls_.length;i<n;i++){
+			var url = this.urls_[i];
+			def = def.then(
+				this.makeResolve_(url,i), this.makeReject_(url,i)
+			);
+		}
+		
+		var self = this;
+		var compDef = new dojo.Deferred();
+		def.then(
+			function(){
+				self.state_ = self.STATE_LOADED;
+				self.dispatch(new SAZ.event.Event(this.EVENT_COMPLETE));
+				compDef.resolve();
+			},function(){
+				
+			}
+		);
+		
+		this.startDef_.resolve();
+		this.dispatch(new SAZ.event.Event(this.EVENT_START));
+		return compDef;
+	},
+	
+	/**
+	 *ロード停止. 
+	 */
+	stop: function() {
+		throw new Error('SAZ.res.SerialImageLoader#stop 未実装です');
+	},
+	
+	/**
+	 * ロードするURLを追加. 
+	 * 
+	 * @param	{String}	url	画像URL. 
+	 * @return	{Number}	登録したインデックス値.
+	 */
+	addUrl: function(url) {
+		this.state_ = this.STATE_READY;
+		var index = dojo.indexOf(this.urls_, url);
+		if(index === -1){
+			return this.urls_.push(url);
+		}
+		return index;
+	},
+	
+	/**
+	 * ロードするURLを複数追加. 
+	 * 
+	 * @param	{Array}	urls	画像URLの配列. 
+	 */
+	addUrls: function(urls) {
+		for(var i=0,n=urls.length;i<n;i++){
+			addUrl(urls[i]);
+		}
+	},
+	
+	/**
+	 * URLを消去. 
+	 */
+	clearUrl: function() {
+		this.state_ = this.STATE_INIT;
+		this.urls_.length = 0;
+	},
+	
+	/**
+	 * 指定インデックスのURL. 
+	 * @param	{Number}	index	インデックス. 
+	 */
+	getUrl: function(index) {
+		return this.urls_[index];
+	},
+	
+	END: ''
+});
+// getter
+SAZ.res.SerialImageLoader.prototype.__defineGetter__("state", SAZ.res.SerialImageLoader.prototype.getState_);
+SAZ.res.SerialImageLoader.prototype.__defineGetter__("count", SAZ.res.SerialImageLoader.prototype.getCount_);
