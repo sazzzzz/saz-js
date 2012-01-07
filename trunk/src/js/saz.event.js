@@ -9,8 +9,24 @@ var SAZ = SAZ || {};
 
 // 名前空間
 SAZ.namespace('SAZ.event.Event');
+
+//
+// 参考までにJSのビルトインEvent
+// 
+// http://www.tohoho-web.com/js/event.htm
+// http://phpjavascriptroom.com/?t=js&p=event_object
+// 
+// type	String	発生したイベントの型を取得
+// target	Object	イベントの発生元	IE未対応
+// マウスの座標
+// screenX, screenY, pageX, pageY, clientX, clientY, offsetX, offsetY
+// キーボードイベント
+// keyCode, which, modfiers
+// 
+//
+
 /**
- * Event
+ * Eventクラス. 
  **/
 SAZ.event.Event = (function() {
 	

@@ -101,7 +101,8 @@ SAZ.res.IMultiLoader = SAZ.declare('SAZ.res.IMultiLoader', null, {
 	/**
 	 * ロードするURLを追加. 
 	 * 
-	 * @param	{String}	url	画像URL. 
+	 * @param	{String}	url	ロードするリソースのURL. 
+	 * @return	{Number}	登録したインデックス値.
 	 */
 	addUrl: function(url) {
 	},
@@ -109,16 +110,35 @@ SAZ.res.IMultiLoader = SAZ.declare('SAZ.res.IMultiLoader', null, {
 	/**
 	 * ロードするURLを複数追加. 
 	 * 
-	 * @param	{Array}	urls	画像URLの配列. 
+	 * @param	{Array}	urls	ロードするURLの配列. 
 	 */
 	addUrls: function(urls) {
 	},
 	
 	/**
-	 * URLを消去. 
+	 * 登録したURLをすべて消去. 
 	 */
 	clearUrl: function() {
 	},
+	
+	/**
+	 * ロードしたリソースを取得. 
+	 * 
+	 * @param	{String}	url	URL.
+	 * @return	{Object}	リソース.
+	 */
+	getResource: function(url) {
+	},
+	
+	/**
+	 * （オプション）ロードしたリソースを、インデックスで指定して取得. 
+	 *
+	 * @param	{Number}	index	インデックス値.
+	 * @return	{Object}	リソース.
+	 */
+	getResourceAt: function(index) {
+	},
+	
 	
 	END: ''
 });
@@ -202,6 +222,7 @@ SAZ.res.SerialImageLoader = SAZ.declare('SAZ.res.SerialImageLoader', SAZ.res.IMu
 		var compDef = new dojo.Deferred();
 		def.then(
 			function(){
+				// this=defなので、selfを使う
 				self.state_ = self.STATE_LOADED;
 				self.dispatch(new SAZ.event.Event(self.EVENT_COMPLETE,self));
 				compDef.resolve();
@@ -254,6 +275,26 @@ SAZ.res.SerialImageLoader = SAZ.declare('SAZ.res.SerialImageLoader', SAZ.res.IMu
 	clearUrl: function() {
 		this.state_ = this.STATE_INIT;
 		this.urls_.length = 0;
+	},
+	
+	/**
+	 * ロードしたリソースを取得. 
+	 * 
+	 * @param	{String}	url	URL.
+	 * @return	{Object}	リソース.
+	 */
+	getResource: function(url) {
+		throw new Error('SAZ.res.SerialImageLoader#getResource 未実装です');
+	},
+	
+	/**
+	 * （オプション）ロードしたリソースを、インデックスで指定して取得. 
+	 *
+	 * @param	{Number}	index	インデックス値.
+	 * @return	{Object}	リソース.
+	 */
+	getResourceAt: function(index) {
+		throw new Error('SAZ.res.SerialImageLoader#getResourceAt 未実装です');
 	},
 	
 	/**
