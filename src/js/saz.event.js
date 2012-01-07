@@ -127,7 +127,7 @@ SAZ.event.Observer = (function() {
 			}
 		}		
 	};
-	dispatchEvent_ = function (e) {
+	dispatch_ = function (e) {
 		var listeners = this.listeners_;
 		//var e = new SAZ.event.Event(type, this);
 		var type = e.type;
@@ -154,17 +154,17 @@ SAZ.event.Observer = (function() {
 		
 		/**
 		 * 対象オブジェクトをObserverとして初期化。
-		 * addObserver、removeObserver、dispatchEventの3つのメソッドを追加。すでにメンバが定義されていたら中断。
+		 * addObserver、removeObserver、dispatchの3つのメソッドを追加。すでにメンバが定義されていたら中断。
 		 * @return	初期化できたらtrue、できなかったらfalse。
 		 */
 		initialize: function (target) {
-			if (target.listeners_!=null || target.addObserver!=null || target.removeObserver!=null || target.dispatchEvent!=null) return false;
+			if (target.listeners_!=null || target.addObserver!=null || target.removeObserver!=null || target.dispatch!=null) return false;
 			
 			target.listeners_ = {};
 			if(target.addObserver==null)target.addObserver = addObserver_;
 			if(target.removeObserver==null)target.removeObserver = removeObserver_;
-			if(target.dispatchEvent==null)target.dispatchEvent = dispatchEvent_;
-			//SAZ.mixin(target, this, ['addObserver', 'removeObserver', 'dispatchEvent'], ['addObserver_', 'removeObserver_', 'dispatchEvent_'])
+			if(target.dispatch==null)target.dispatch = dispatch_;
+			//SAZ.mixin(target, this, ['addObserver', 'removeObserver', 'dispatch'], ['addObserver_', 'removeObserver_', 'dispatch_'])
 			return true;
 		},
 		END:''

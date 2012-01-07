@@ -52,9 +52,9 @@ SAZ.mvp.Value = (function() {
 		},
 		setValue: function (value) {
 			var old=this._value;
-			if(this.dispatchEvent)this.dispatchEvent(new WatchEvent(SAZ.mvp.Value.EVENT_CHANGING,this,old,value));
+			if(this.dispatch)this.dispatch(new WatchEvent(SAZ.mvp.Value.EVENT_CHANGING,this,old,value));
 			this._value = value;
-			if(this.dispatchEvent)this.dispatchEvent(new WatchEvent(SAZ.mvp.Value.EVENT_CHANGED,this,old,value));
+			if(this.dispatch)this.dispatch(new WatchEvent(SAZ.mvp.Value.EVENT_CHANGED,this,old,value));
 		}
 	};
 	//if (Constr.prototype.addObserver == null) SAZ.event.Observer.initialize(Constr.prototype);
